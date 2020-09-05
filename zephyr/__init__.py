@@ -1,13 +1,43 @@
+import sys
+
+registerNames = ["eax", "ebx", "ecx", "edx", "ax", "ah", "al", "bx", "bh", "bl", "cx", "ch", "cl", "dx", "dh", "dl", "si", "di"]
+builtins = ["inturrupt"]
 def stripTabs(code):
 	code = code.replace("\t", "")
 	return code
 
 class Function:
-	def __init__(self, code):
+	def __init__(self, code, name):
 		self.code = stripTabs(code)
+		self.name = name
 		self.asm = ""
 		for line in self.code.split("\n"):
-			print(line)
+			line = line[:-1]
+			if(line.startswith("//") or line == ""):
+				pass
+			elif("=" in line): # Variable or register set
+				varname = line.split(" ")[0].lower()
+				varvalue = line.split(" ")[2]
+				if(varname in registerNames):
+					self.asm += "mov " + varname + ", " + varvalue + "\n"
+				else:
+					print("Error in function \"" + self.name + "\": variables not supported yet!")
+					sys.exit(3)
+			elif("(" in line and ")" in line): # Function call
+				command = line.split("(")
+				command[1] = command[1][:-1]
+				if(command[0] in builtins):
+					if(command[0] == "inturrupt"):
+						self.asm += "int " + command[1] + "\n"
+				else:
+					self.asm += "call " + command[0] + "\n"
+			elif(line == "return"):
+				self.asm += "ret\n"
+			else:
+				print("Error in function code! (" + line + " invalid)") # TODO: Print line number
+				sys.exit(3)
+		if("\nret\n" not in self.asm):
+			print("Warning! Function \"" + self.name + "\" has no return!")
 
 class SourceFile:
 	def __init__(self, code):
@@ -33,7 +63,7 @@ class SourceFile:
 						line += 1
 						cLine = code[line] + "\n"
 						
-					func = Function(func)
+					func = Function(func, funcName)
 					self.functions[funcName] = func
 					
 				else:

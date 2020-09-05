@@ -5,6 +5,7 @@ func print() {
 	BL = 15;
 	CX = 1;
 	inturrupt(0x10);
+	return;
 }
 
 func helloworld() {

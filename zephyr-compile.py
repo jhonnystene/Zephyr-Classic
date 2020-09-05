@@ -16,3 +16,6 @@ except:
 	sys.exit(2)
 
 sourceFile = zephyr.SourceFile(fileContents)
+for function in sourceFile.functions:
+	print("==== FUNCTION \"" + function + "\" CODE ====")
+	print(sourceFile.functions[function].asm)
