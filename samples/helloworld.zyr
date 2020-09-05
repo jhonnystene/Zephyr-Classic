@@ -1,0 +1,35 @@
+// Inputs: AL - Character
+func print() {
+	AH = 0x09;
+	BH = 0;
+	BL = 15;
+	CX = 1;
+	inturrupt(0x10);
+}
+
+func helloworld() {
+	AL = 'H';
+	print();
+	AL = 'e';
+	print();
+	AL = 'l';
+	print();
+	print();
+	AL = 'o';
+	print();
+	AL = ',';
+	print();
+	AL = ' ';
+	print();
+	AL = 'W';
+	print();
+	AL = 'o';
+	print();
+	AL = 'r';
+	print();
+	AL = 'l';
+	print();
+	AL = 'd';
+	print();
+	
+}
