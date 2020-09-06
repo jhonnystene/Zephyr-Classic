@@ -7,14 +7,15 @@ __________            .__
 
 ===========================================
 ======= Zephyr Programming Language =======
-======= Version                0.1a =======
+======= Version                0.2a =======
 ======= Author         Johnny Stene =======
 ===========================================
 
 ABOUT ZEPHYR
 Zephyr is a programming language with a syntax similar to C that is
 meant to translate directly into Intel syntax x86 assembly for use with
-NASM.
+NASM. Its main purpose is operating system development and applications
+requiring extreme low level access to the hardware and/or speed.
 
 TABLE OF CONTENTS
 documentation/

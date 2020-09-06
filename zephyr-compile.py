@@ -1,4 +1,11 @@
 #!/usr/bin/env python3
+# Exit codes:
+# 0 - Success
+# 1 - Invalid arguments
+# 2 - Couldn't open file
+# 3 - Syntax error
+# 4 - Missing #mainfunc
+
 import os, sys
 
 import zephyr
@@ -19,3 +26,4 @@ sourceFile = zephyr.SourceFile(fileContents)
 print("Generated source code: ")
 print("")
 print(sourceFile.genASM())
+sys.exit(0)

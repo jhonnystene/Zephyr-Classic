@@ -2,31 +2,91 @@ import sys
 
 registerNames = ["eax", "ebx", "ecx", "edx", "ax", "ah", "al", "bx", "bh", "bl", "cx", "ch", "cl", "dx", "dh", "dl", "si", "di"]
 builtins = ["inturrupt", "push_all", "pop_all", "hang"]
+
 def stripTabs(code):
 	code = code.replace("\t", "")
 	return code
 
+VARIABLE_TYPE_BYTE = 0
+VARIABLE_TYPE_WORD = 1
+VARIABLE_TYPE_DWORD = 2
+VARIABLE_TYPE_STRING = 3
+class Variable:
+	def __init__(self, vartype, name, value, isGlobal):
+		self.type = vartype
+		self.name = name
+		self.value = value
+		self.isGlobal = isGlobal
+	
+	def genASM(self):
+		if(self.isGlobal):
+			asm = self.name
+		else:
+			asm = "." + self.name
+			
+		if(self.type == VARIABLE_TYPE_BYTE or self.type == VARIABLE_TYPE_STRING):
+			asm += " db "
+		elif(self.type == VARIABLE_TYPE_WORD):
+			asm += " dw "
+		elif(self.type == VARIABLE_TYPE_DWORD):
+			asm += " dd "
+		else:
+			print("Invalid type " + str(self.type) + " on variable " + self.name)
+			sys.exit(3)
+		
+		if(self.type == VARIABLE_TYPE_STRING):
+			self.value = self.value.replace("\n", "\", 13, 10, \"")
+			
+		asm += self.value
+		
+		if(self.type == VARIABLE_TYPE_STRING):
+			asm += ", 0"
+		
+		return asm
+		
 class Function:
 	def __init__(self, code, name):
 		self.code = stripTabs(code) # Make sure we don't have any tabs messing up our code
 		self.name = name # Set our function name
 		
+		self.variables = []
+		
 		# Parse function code into ASM
-		# TODO: If/else statements, variables
+		# TODO: If/else statements, for loops, while loops, variables
 		self.asm = ""
 		for line in self.code.split("\n"):
 			line = line[:-1] # Get rid of semicolon
 			if(line.startswith("//") or line == ""): # Ignore empty lines and comments
 				pass
 			elif("=" in line): # Variable or register set
-				varname = line.split(" ")[0].lower() # Get var/reg name
-				varvalue = line.split(" ")[2] # Get desired value
-				
-				if(varname in registerNames): # Register?
-					self.asm += "mov " + varname + ", " + varvalue + "\n"
-				else: # Variable?
-					print("Error in function \"" + self.name + "\": variables not supported yet!") # Not supported yet.
-					sys.exit(3)
+				if("byte " in line or "word " in line or "dword " in line or "string " in line):
+					vartype = line.split(" ")[0]
+					varname = line.split(" ")[1].lower()
+					if(len(line.split(" ")) == 4):
+						varvalue = line.split(" ")[3]
+					else:
+						varvalue = ""
+						for i in range(3, len(line.split(" "))):
+							varvalue += line.split(" ")[i] + " "
+					if(vartype == "byte"):
+						vartype = VARIABLE_TYPE_BYTE
+					elif(vartype == "word"):
+						vartype = VARIABLE_TYPE_WORD
+					elif(vartype == "dword"):
+						vartype = VARIABLE_TYPE_DWORD
+					elif(vartype == "string"):
+						vartype = VARIABLE_TYPE_STRING
+						
+					self.variables.append(Variable(vartype, varname, varvalue, False))
+				else:
+					varname = line.split(" ")[0].lower() # Get var/reg name
+					varvalue = line.split(" ")[2] # Get desired value
+					
+					if(varname in registerNames): # Register?
+						self.asm += "mov " + varname + ", " + varvalue + "\n"
+					else: # Variable?
+						print("Error in function \"" + self.name + "\": variables not supported yet!") # Not supported yet.
+						sys.exit(3)
 			elif("(" in line and ")" in line): # Function call
 				command = line.split("(") # Split command and argument
 				command[1] = command[1][:-1] # Remove ) from argument
@@ -38,7 +98,7 @@ class Function:
 					elif(command[0] == "pop_all"): # POPA?
 						self.asm += "popa"
 					elif(command[0] == "hang"): # Hang?
-						self.asm += ".hang:\njmp .hang"
+						self.asm += ".hang:\njmp .hang\n"
 				else: # Only call commands for now. Maybe JMP support in future?
 					self.asm += "call " + command[0] + "\n"
 			elif(line == "return"): # Returning from function?
@@ -46,6 +106,9 @@ class Function:
 			else:
 				print("Error in function code! (" + line + " invalid)") # TODO: Print line number
 				sys.exit(3)
+		
+		for variable in self.variables:
+			self.asm += variable.genASM() + "\n"
 		
 		# Check if function has return statement
 		if("\nret\n" not in self.asm):

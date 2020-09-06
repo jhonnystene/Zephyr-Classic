@@ -1,0 +1,9 @@
+#mainfunc main
+
+func main() {
+	byte ByteVar = 0;
+	word WordVar = 0;
+	dword DoubleWordVar = 0;
+	string StringVar = "Hello, World!";
+	hang();
+}
