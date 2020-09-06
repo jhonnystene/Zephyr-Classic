@@ -1,0 +1,9 @@
+DECLARING VARIABLES
+You can declare a variable by specifying its type, name, and value, like
+this:
+TYPE NAME = VALUE;
+
+Where TYPE is one of byte, word, dword, and string.
+
+UPDATING VARIABLES
+Updating is the same as defining, except it doesn't need the type.

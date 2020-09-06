@@ -24,6 +24,9 @@ documentation/
 		custom.txt - Documentation on creating and calling functions.
 	preprocessor/
 		mainfunc.txt - Information on defining the main function.
+		global.txt - Information on defining global variables.
+	syntax/
+		variables.txt - Information on declaring and using variables.
 samples/
 	helloworld.zyr - Basic "Hello, World!" application.
 	variables.zyr - Variable types.

@@ -1,0 +1,2 @@
+To define a global variable, use the #global preprocessor instruction,
+followed by a variable definition string. DO NOT include a semicolon.
