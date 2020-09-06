@@ -1,0 +1,8 @@
+#mainfunc main
+
+func main() {
+	AX = 10;
+	AX += 5;
+	AX -= 7;
+	BX = AX;
+}

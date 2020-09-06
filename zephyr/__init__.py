@@ -58,7 +58,7 @@ class Function:
 			line = line[:-1] # Get rid of semicolon
 			if(line.startswith("//") or line == ""): # Ignore empty lines and comments
 				pass
-			elif("=" in line): # Variable or register set
+			elif(" = " in line): # Variable or register set
 				if("byte " in line or "word " in line or "dword " in line or "string " in line):
 					vartype = line.split(" ")[0]
 					varname = line.split(" ")[1].lower()
@@ -80,12 +80,20 @@ class Function:
 					self.variables.append(Variable(vartype, varname, varvalue, False))
 				else:
 					varname = line.split(" ")[0].lower() # Get var/reg name
-					varvalue = line.split(" ")[2] # Get desired value
+					varvalue = line.split(" ")[2].lower() # Get desired value
 					
 					if(varname in registerNames): # Register?
 						self.asm += "mov " + varname + ", " + varvalue + "\n"
 					else: # Variable?
 						self.asm += "mov " + varname + ", " + varvalue + "\n"
+						
+			elif("+=" in line or "-=" in line): # Math
+				instruction = line.split(" ")
+				if(instruction[1] == "+="):
+					self.asm += "add " + instruction[0].lower() + ", " + instruction[2].lower() + "\n"
+				else:
+					self.asm += "sub " + instruction[0].lower() + ", " + instruction[2].lower() + "\n"
+				
 			elif("(" in line and ")" in line): # Function call
 				command = line.split("(") # Split command and argument
 				command[1] = command[1][:-1] # Remove ) from argument
