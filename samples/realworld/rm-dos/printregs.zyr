@@ -1,4 +1,4 @@
-#mainfunc kernel_dump_regs
+#library
 
 func kernel_dump_regs() {
 	push_all();

@@ -14,6 +14,7 @@ class SourceFile:
 		self.code = ""
 		self.functions = {}
 		self.variables = []
+		self.hasMainFunction = True
 		self.mainFunction = ""
 	
 	def parse(self):
@@ -35,6 +36,13 @@ class SourceFile:
 				# Set main function
 				if(instruction[0] == "mainfunc"):
 					self.mainFunction = instruction[1]
+				
+				# Library
+				elif(instruction[0] == "library"):
+					self.hasMainFunction = False
+				
+				elif(instruction[0] == "application"):
+					self.hasMainFunction = True
 					
 				# Create global variable
 				elif(instruction[0] == "global"):
@@ -89,18 +97,18 @@ class SourceFile:
 		print("Found " + str(len(self.functions)) + " functions.")
 				
 	def genASM(self):
-		if(self.mainFunction == ""):
-			zephyr.error("Error! Program does not contain a #mainfunc preprocessor instruction.", 4)
-		
-		asm = "call " + self.mainFunction + "\n" # Start with main function call
-		
+		if(self.hasMainFunction):
+			if(self.mainFunction == ""):
+				zephyr.error("Error! Program does not contain a #mainfunc preprocessor instruction.", 4)
+			
+			asm = "call " + self.mainFunction + "\n" # Start with main function call
+		else:
+			asm = ""
+			
 		# Add function source codes
 		for function in self.functions:
 			asm += function[:-2] + ":\n"
 			asm += self.functions[function].genASM()
-			
-		# Don't try to run global variables
-		asm += "hang:\njmp hang\n"
 		
 		# Add global variables
 		for variable in self.variables:
