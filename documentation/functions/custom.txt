@@ -1,0 +1,16 @@
+DEFINING
+Functions are defined using the "func" keyword with the following
+structure:
+
+func FUNCTIONNAME() {
+	FUNCTION CONTENTS
+}
+
+FUNCTIONNAME is the name of the function.
+FUNCTION CONTENTS is the contents of the function and must be inside the
+two curly braces. It is best to include a return statement (return;) at 
+the end of the function, but it is not required.
+
+CALLING
+Functions can be called anywhere in the program by calling the function
+name followed by opening and closing brackets.

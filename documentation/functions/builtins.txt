@@ -1,0 +1,9 @@
+inturrupt()
+	This function takes a hexadecimal or decimal value representing an
+	inturrupt.
+
+push_all()
+	This function pushes all registers onto the stack.
+
+pop_all()
+	This function pops all registers from the stack.

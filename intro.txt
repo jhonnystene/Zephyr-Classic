@@ -1,0 +1,30 @@
+__________            .__                   
+\____    /____ ______ |  |__ ___.__._______ 
+  /     // __ \\____ \|  |  <   |  |\_  __ \
+ /     /\  ___/|  |_> >   Y  \___  | |  | \/
+/_______ \___  >   __/|___|  / ____| |__|   
+        \/   \/|__|        \/\/             
+
+===========================================
+======= Zephyr Programming Language =======
+======= Version                0.1a =======
+======= Author         Johnny Stene =======
+===========================================
+
+ABOUT ZEPHYR
+Zephyr is a programming language with a syntax similar to C that is
+meant to translate directly into Intel syntax x86 assembly for use with
+NASM.
+
+TABLE OF CONTENTS
+documentation/
+	functions/
+		builtins.txt - Built-in function documentation.
+		custom.txt - Documentation on creating and calling functions.
+	preprocessor/
+samples/
+	helloworld.zyr - Basic "Hello, World!" application.
+zephyr/
+	__init__.py - Python module for Zephyr.
+zephyr-compile.py - Compilation script for Zephyr applications.
+intro.txt - This document.
