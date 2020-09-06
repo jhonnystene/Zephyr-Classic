@@ -26,10 +26,15 @@ documentation/
 		mainfunc.txt - Information on defining the main function.
 		global.txt - Information on defining global variables.
 	syntax/
-		variables.txt - Information on declaring and using variables.
+		variables.txt - Information on declaring and using variables. 
+        math.txt - Information on doing math.
 samples/
 	helloworld.zyr - Basic "Hello, World!" application.
 	variables.zyr - Variable types.
+    math.zyr - Math functions.
+    realworld/
+        rm-dos/
+            printregs.zyr - kernel_dump_regs from RM-DOS.
 zephyr/
 	__init__.py - Python module for Zephyr.
 zephyr-compile.py - Compilation script for Zephyr applications.
