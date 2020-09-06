@@ -35,7 +35,7 @@ class SourceFile:
 				elif(instruction[0] == "global"):
 					vartype = instruction[1]
 					varname = instruction[2]
-					if(varname in zephyr.registerNames or varname in zephyr.builtins):
+					if(varname in zephyr.registers or varname in zephyr.builtins):
 						zephyr.error("Error! " + varname + " is reserved.", 5);
 					if(len(instruction) == 5):
 						varvalue = instruction[4]
@@ -60,7 +60,7 @@ class SourceFile:
 					# Sort out the name from the code and store it in a new Function object
 					func = ""
 					funcName = code[line].split(" ")[1]
-					if(funcName in zephyr.registerNames or funcName in zephyr.builtins):
+					if(funcName in zephyr.registers or funcName in zephyr.builtins):
 						zephyr.error("Error! " + funcName + " is reserved.", 5);
 					cLine = ""
 					while("}" not in cLine):

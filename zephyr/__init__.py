@@ -1,6 +1,6 @@
 import sys
 
-registerNames = ["eax", "ebx", "ecx", "edx", "ax", "ah", "al", "bx", "bh", "bl", "cx", "ch", "cl", "dx", "dh", "dl", "si", "di"]
+registers = ["eax", "ebx", "ecx", "edx", "ax", "ah", "al", "bx", "bh", "bl", "cx", "ch", "cl", "dx", "dh", "dl", "si", "di"]
 builtins = ["inturrupt", "push_all", "pop_all", "hang"]
 
 def stripTabs(code):

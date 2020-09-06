@@ -27,7 +27,7 @@ class Function:
 				if("byte " in line or "word " in line or "dword " in line or "string " in line):
 					vartype = line.split(" ")[0]
 					varname = line.split(" ")[1].lower()
-					if(varname in zephyr.registerNames or varname in zephyr.builtins):
+					if(varname in zephyr.registers or varname in zephyr.builtins):
 						zephyr.error("Error! " + varname + " is reserved.", 5);
 					if(len(line.split(" ")) == 4):
 						varvalue = line.split(" ")[3]
