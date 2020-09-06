@@ -1,7 +1,7 @@
 import sys
 
 registerNames = ["eax", "ebx", "ecx", "edx", "ax", "ah", "al", "bx", "bh", "bl", "cx", "ch", "cl", "dx", "dh", "dl", "si", "di"]
-builtins = ["inturrupt", "push_all", "pop_all"]
+builtins = ["inturrupt", "push_all", "pop_all", "hang"]
 def stripTabs(code):
 	code = code.replace("\t", "")
 	return code
@@ -37,6 +37,8 @@ class Function:
 						self.asm += "pusha"
 					elif(command[0] == "pop_all"): # POPA?
 						self.asm += "popa"
+					elif(command[0] == "hang"): # Hang?
+						self.asm += ".hang:\njmp .hang"
 				else: # Only call commands for now. Maybe JMP support in future?
 					self.asm += "call " + command[0] + "\n"
 			elif(line == "return"): # Returning from function?
@@ -51,12 +53,12 @@ class Function:
 
 class SourceFile:
 	# TODO: #include - Include a file
-	# TODO: #mainfunc - Define main function
 	
 	def __init__(self, code):
 		print("Parsing source code...")
 		self.code = stripTabs(code) # Strip tabs
 		self.functions = {} # Create function list
+		self.mainFunction = ""
 		code = self.code.split("\n") # Split up into newlines so we can loop through
 		
 		# Not a for loop because we're about to jump all over the place
@@ -64,6 +66,11 @@ class SourceFile:
 		while(line != len(code)):
 			if(code[line].startswith("//") or code[line] == ""): # Comment or empty line?
 				pass # Ignore it
+				
+			elif(code[line].startswith("#")): # Preprocessor instruction
+				instruction = code[line][1:].split(" ")
+				if(instruction[0] == "mainfunc"):
+					self.mainFunction = instruction[1]
 				
 			# TODO global variables
 				
@@ -90,4 +97,18 @@ class SourceFile:
 		
 		print("Found " + str(len(self.functions)) + " functions.")
 				
+	def genASM(self):
+		if(self.mainFunction == ""):
+			print("Error! Program does not contain a #mainfunc preprocessor instruction.")
+			sys.exit(4)
 		
+		asm = ""
+		
+		asm += "call " + self.mainFunction + "\n" # Add main function call
+		
+		# Add function source codes
+		for function in self.functions:
+			asm += function[:-2] + ":\n"
+			asm += self.functions[function].asm
+			
+		return asm

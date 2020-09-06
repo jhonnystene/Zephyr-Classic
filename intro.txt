@@ -22,6 +22,7 @@ documentation/
 		builtins.txt - Built-in function documentation.
 		custom.txt - Documentation on creating and calling functions.
 	preprocessor/
+		mainfunc.txt - Information on defining the main function.
 samples/
 	helloworld.zyr - Basic "Hello, World!" application.
 zephyr/

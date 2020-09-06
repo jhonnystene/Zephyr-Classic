@@ -1,0 +1,2 @@
+The "mainfunc" preprocessor instruction defines what function should be 
+called first. The value passed should NOT include brackets.
