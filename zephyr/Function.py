@@ -21,9 +21,17 @@ class Function:
 		
 		for line in self.code.split("\n"):
 			line = line[:-1] # Get rid of semicolon
-			if(line.startswith("//") or line == ""): # Ignore empty lines and comments
+			
+			# Ignore empty lines and comments
+			if(line.startswith("//") or line == ""):
 				pass
-			elif(" = " in line): # Variable or register set
+				
+			# Error if preprocessor instruction
+			elif(line.startswith("#")):
+				zephyr.error("Error! Preprocessor instruction used in " + self.name, 6)
+			
+			# Variable/register set
+			elif(" = " in line):
 				if("byte " in line or "word " in line or "dword " in line or "string " in line):
 					variableType = line.split(" ")[0]
 					variableName = line.split(" ")[1].lower()
@@ -47,15 +55,17 @@ class Function:
 							variableName = "." + variableName	
 					
 					asm += "mov " + variableName + ", " + variableValue + "\n"
-						
-			elif("+=" in line or "-=" in line): # Math
+			
+			# Math
+			elif("+=" in line or "-=" in line):
 				instruction = line.split(" ")
 				if(instruction[1] == "+="):
 					asm += "add " + instruction[0].lower() + ", " + instruction[2].lower() + "\n"
 				else:
 					asm += "sub " + instruction[0].lower() + ", " + instruction[2].lower() + "\n"
 				
-			elif("(" in line and ")" in line): # Function call
+			# Function call
+			elif("(" in line and ")" in line):
 				command = line.split("(") # Split command and argument
 				command[1] = command[1][:-1] # Remove ) from argument
 				if(command[0] in zephyr.builtins): # Are we trying to use a built-in function?
@@ -69,8 +79,12 @@ class Function:
 						asm += ".hang:\njmp .hang\n"
 				else: # Only call commands for now. Maybe JMP support in future?
 					asm += "call " + command[0] + "\n"
-			elif(line == "return"): # Returning from function?
+			
+			# Return statement?
+			elif(line == "return"):
 				asm += "ret\n"
+			
+			# Syntax error?
 			else:
 				zephyr.error("Error in function code! (" + line + " invalid)", 3) # TODO: Print line number
 		

@@ -6,6 +6,7 @@
 # 3 - Syntax error
 # 4 - Missing #mainfunc
 # 5 - Trying to use reserved name
+# 6 - Preprocessor directive in function
 
 import os, sys
 
