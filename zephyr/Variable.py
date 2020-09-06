@@ -3,22 +3,22 @@ VARIABLE_TYPE_WORD = 1
 VARIABLE_TYPE_DWORD = 2
 VARIABLE_TYPE_STRING = 3
 
-def createFrom(vartype, varname, varvalue, isGlobal):
-	if(vartype == "byte"):
-		vartype = VARIABLE_TYPE_BYTE
-	elif(vartype == "word"):
-		vartype = VARIABLE_TYPE_WORD
-	elif(vartype == "dword"):
-		vartype = VARIABLE_TYPE_DWORD
-	elif(vartype == "string"):
-		vartype = VARIABLE_TYPE_STRING
+def createFrom(variableType, variableName, variableValue, isGlobal):
+	if(variableType == "byte"):
+		variableType = VARIABLE_TYPE_BYTE
+	elif(variableType == "word"):
+		variableType = VARIABLE_TYPE_WORD
+	elif(variableType == "dword"):
+		variableType = VARIABLE_TYPE_DWORD
+	elif(variableType == "string"):
+		variableType = VARIABLE_TYPE_STRING
 	
-	v = Variable(vartype, varname, varvalue, isGlobal)
+	v = Variable(variableType, variableName, variableValue, isGlobal)
 	return v
 
 class Variable:
-	def __init__(self, vartype, name, value, isGlobal):
-		self.type = vartype
+	def __init__(self, variableType, name, value, isGlobal):
+		self.type = variableType
 		self.name = name.lower()
 		self.value = value
 		self.isGlobal = isGlobal

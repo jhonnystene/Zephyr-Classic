@@ -25,28 +25,28 @@ class Function:
 				pass
 			elif(" = " in line): # Variable or register set
 				if("byte " in line or "word " in line or "dword " in line or "string " in line):
-					vartype = line.split(" ")[0]
-					varname = line.split(" ")[1].lower()
-					if(varname in zephyr.registers or varname in zephyr.builtins):
-						zephyr.error("Error! " + varname + " is reserved.", 5);
+					variableType = line.split(" ")[0]
+					variableName = line.split(" ")[1].lower()
+					if(variableName in zephyr.registers or variableName in zephyr.builtins):
+						zephyr.error("Error! " + variableName + " is reserved.", 5);
 					if(len(line.split(" ")) == 4):
-						varvalue = line.split(" ")[3]
+						variableValue = line.split(" ")[3]
 					else:
-						varvalue = ""
+						variableValue = ""
 						for i in range(3, len(line.split(" "))):
-							varvalue += line.split(" ")[i] + " "
+							variableValue += line.split(" ")[i] + " "
 						
-					self.variables.append(Variable.createFrom(vartype, varname, varvalue, False))
+					self.variables.append(Variable.createFrom(variableType, variableName, variableValue, False))
 				else:
-					varname = line.split(" ")[0].lower() # Get var/reg name
-					varvalue = line.split(" ")[2].lower() # Get desired value
+					variableName = line.split(" ")[0].lower() # Get var/reg name
+					variableValue = line.split(" ")[2].lower() # Get desired value
 					
 					# Local or global variable?
 					for variable in self.variables:
-						if(varname == variable.name):
-							varname = "." + varname	
+						if(variableName == variable.name):
+							variableName = "." + variableName	
 					
-					asm += "mov " + varname + ", " + varvalue + "\n"
+					asm += "mov " + variableName + ", " + variableValue + "\n"
 						
 			elif("+=" in line or "-=" in line): # Math
 				instruction = line.split(" ")

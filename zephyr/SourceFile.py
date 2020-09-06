@@ -23,57 +23,67 @@ class SourceFile:
 		
 		# Not a for loop because we're about to jump all over the place
 		line = 0
-		while(line != len(code)):
-			if(code[line].startswith("//") or code[line] == ""): # Comment or empty line?
-				pass # Ignore it
+		while(line < len(code)):
+			# Ignore comments and empty lines
+			if(code[line].startswith("//") or code[line] == ""):
+				pass
 				
-			elif(code[line].startswith("#")): # Preprocessor instruction
+			# Handle preprocessor instructions
+			elif(code[line].startswith("#")):
 				instruction = code[line][1:].split(" ")
+				
+				# Set main function
 				if(instruction[0] == "mainfunc"):
 					self.mainFunction = instruction[1]
 					
+				# Create global variable
 				elif(instruction[0] == "global"):
-					vartype = instruction[1]
-					varname = instruction[2]
-					if(varname in zephyr.registers or varname in zephyr.builtins):
-						zephyr.error("Error! " + varname + " is reserved.", 5);
+					variableType = instruction[1]
+					variableName = instruction[2]
+					
+					# Make sure we're not trying to use a reserved name
+					if(zephyr.isReserved(variableName)):
+						zephyr.error("Error! " + variableName + " is reserved.", 5);
+					
+					# Make sure we treat everything after the variable name as one argument
 					if(len(instruction) == 5):
-						varvalue = instruction[4]
+						variableValue = instruction[4]
 					else:
-						varvalue = ""
+						variableValue = ""
 						for i in range(4, len(instruction)):
-							varvalue += instruction[i] + " "
+							variableValue += instruction[i] + " "
+
+					# Create a new variable object and add it to our list
+					self.variables.append(Variable.createFrom(variableType, variableName, variableValue, True))
 					
-					if(vartype == "byte"):
-						vartype = Variable.VARIABLE_TYPE_BYTE
-					elif(vartype == "word"):
-						vartype = Variable.VARIABLE_TYPE_WORD
-					elif(vartype == "dword"):
-						vartype = Variable.VARIABLE_TYPE_DWORD
-					elif(vartype == "string"):
-						vartype = Variable.VARIABLE_TYPE_STRING
-						
-					self.variables.append(Variable.createFrom(vartype, varname, varvalue, True))
+			# New function
+			elif("func " in code[line]):
+				# Make sure we don't try to interpret curly brackets on other lines
+				if("{" not in code[line]):
+					line += 1
+				
+				# Init variables
+				functionCode = ""
+				functionName = code[line].split(" ")[1]
+				
+				# Make sure we're not trying to use a reserved name
+				if(zephyr.isReserved(functionName)):
+					zephyr.error("Error! " + functionName + " is reserved.", 5);
 					
-			elif("{" in code[line]): # Starting a function?
-				if("func" in code[line]):
-					# Sort out the name from the code and store it in a new Function object
-					func = ""
-					funcName = code[line].split(" ")[1]
-					if(funcName in zephyr.registers or funcName in zephyr.builtins):
-						zephyr.error("Error! " + funcName + " is reserved.", 5);
-					cLine = ""
-					while("}" not in cLine):
-						func += cLine
-						line += 1
-						cLine = code[line] + "\n"
-						
-					func = Function.createFrom(func, funcName)
-					self.functions[funcName] = func
-				else:
-					zephyr.error("Error on line " + str(line + 1) + ": Misplaced '{'", 3)
+				# Loop through the code and add it to the function code
+				currentLine = ""
+				while("}" not in currentLine):
+					functionCode += currentLine
+					line += 1
+					currentLine = code[line] + "\n"
+				
+				# Create a Function object from the code and store it in our function list
+				function = Function.createFrom(functionCode, functionName)
+				self.functions[functionName] = function
+			
 			else:
 				zephyr.error("Error on line " + str(line + 1) + ": Misplaced non-function code.", 3)
+			
 			line += 1
 		
 		print("Found " + str(len(self.functions)) + " functions.")
