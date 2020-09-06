@@ -72,9 +72,9 @@ class Function:
 					if(command[0] == "inturrupt"): # INT?
 						asm += "int " + command[1] + "\n"
 					elif(command[0] == "push_all"): # PUSHA?
-						asm += "pusha"
+						asm += "pusha\n"
 					elif(command[0] == "pop_all"): # POPA?
-						asm += "popa"
+						asm += "popa\n"
 					elif(command[0] == "hang"): # Hang?
 						asm += ".hang:\njmp .hang\n"
 				else: # Only call commands for now. Maybe JMP support in future?
