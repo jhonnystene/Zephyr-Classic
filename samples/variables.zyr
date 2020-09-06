@@ -1,4 +1,8 @@
 #mainfunc main
+#global byte GlobalByteVar = 0
+#global word GlobalWordVar = 0
+#global dword GlobalDoubleWordVar = 0
+#global string GlobalStringVar = "Hello, World!"
 
 func main() {
 	byte ByteVar = 0;
@@ -9,5 +13,10 @@ func main() {
 	ByteVar = 10;
 	WordVar = 10;
 	DoubleWordVar = 10;
+	
+	GlobalByteVar = 10;
+	GlobalWordVar = 10;
+	GlobalDoubleWordVar = 10;
+	
 	hang();
 }

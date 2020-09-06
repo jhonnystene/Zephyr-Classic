@@ -14,7 +14,7 @@ VARIABLE_TYPE_STRING = 3
 class Variable:
 	def __init__(self, vartype, name, value, isGlobal):
 		self.type = vartype
-		self.name = name
+		self.name = name.lower()
 		self.value = value
 		self.isGlobal = isGlobal
 	
@@ -85,15 +85,7 @@ class Function:
 					if(varname in registerNames): # Register?
 						self.asm += "mov " + varname + ", " + varvalue + "\n"
 					else: # Variable?
-						cont = True
-						for variable in self.variables:
-							if(cont == True):
-								if(variable.name == varname):
-									self.asm += "mov " + varname + ", " + varvalue + "\n"
-									cont = False
-						if(cont == True):
-							print("Error in function \"" + self.name + "\": Variable " + varname + " doesn't exist!")
-							sys.exit(3)
+						self.asm += "mov " + varname + ", " + varvalue + "\n"
 			elif("(" in line and ")" in line): # Function call
 				command = line.split("(") # Split command and argument
 				command[1] = command[1][:-1] # Remove ) from argument
@@ -128,6 +120,7 @@ class SourceFile:
 		print("Parsing source code...")
 		self.code = stripTabs(code) # Strip tabs
 		self.functions = {} # Create function list
+		self.variables = []
 		self.mainFunction = ""
 		code = self.code.split("\n") # Split up into newlines so we can loop through
 		
@@ -141,9 +134,27 @@ class SourceFile:
 				instruction = code[line][1:].split(" ")
 				if(instruction[0] == "mainfunc"):
 					self.mainFunction = instruction[1]
-				
-			# TODO global variables
-				
+				elif(instruction[0] == "global"):
+					vartype = instruction[1]
+					varname = instruction[2]
+					if(len(instruction) == 5):
+						varvalue = instruction[4]
+					else:
+						varvalue = ""
+						for i in range(4, len(instruction)):
+							varvalue += instruction[i] + " "
+					
+					if(vartype == "byte"):
+						vartype = VARIABLE_TYPE_BYTE
+					elif(vartype == "word"):
+						vartype = VARIABLE_TYPE_WORD
+					elif(vartype == "dword"):
+						vartype = VARIABLE_TYPE_DWORD
+					elif(vartype == "string"):
+						vartype = VARIABLE_TYPE_STRING
+						
+					self.variables.append(Variable(vartype, varname, varvalue, True))
+					
 			elif("{" in code[line]): # Starting a function?
 				if("func" in code[line]):
 					# Sort out the name from the code and store it in a new Function object
@@ -180,5 +191,12 @@ class SourceFile:
 		for function in self.functions:
 			asm += function[:-2] + ":\n"
 			asm += self.functions[function].asm
+			
+		# Don't try to run global variables
+		asm += "hang:\njmp hang\n"
+		
+		# Add global variables
+		for variable in self.variables:
+			asm += variable.genASM() + "\n"
 			
 		return asm
