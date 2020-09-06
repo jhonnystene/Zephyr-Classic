@@ -5,5 +5,9 @@ func main() {
 	word WordVar = 0;
 	dword DoubleWordVar = 0;
 	string StringVar = "Hello, World!";
+	
+	ByteVar = 10;
+	WordVar = 10;
+	DoubleWordVar = 10;
 	hang();
 }

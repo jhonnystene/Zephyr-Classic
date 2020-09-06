@@ -52,7 +52,7 @@ class Function:
 		self.variables = []
 		
 		# Parse function code into ASM
-		# TODO: If/else statements, for loops, while loops, variables
+		# TODO: If/else statements, for loops, while loops
 		self.asm = ""
 		for line in self.code.split("\n"):
 			line = line[:-1] # Get rid of semicolon
@@ -85,8 +85,15 @@ class Function:
 					if(varname in registerNames): # Register?
 						self.asm += "mov " + varname + ", " + varvalue + "\n"
 					else: # Variable?
-						print("Error in function \"" + self.name + "\": variables not supported yet!") # Not supported yet.
-						sys.exit(3)
+						cont = True
+						for variable in self.variables:
+							if(cont == True):
+								if(variable.name == varname):
+									self.asm += "mov " + varname + ", " + varvalue + "\n"
+									cont = False
+						if(cont == True):
+							print("Error in function \"" + self.name + "\": Variable " + varname + " doesn't exist!")
+							sys.exit(3)
 			elif("(" in line and ")" in line): # Function call
 				command = line.split("(") # Split command and argument
 				command[1] = command[1][:-1] # Remove ) from argument
