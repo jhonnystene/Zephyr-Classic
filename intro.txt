@@ -26,6 +26,7 @@ documentation/
 		mainfunc.txt - Information on defining the main function.
 samples/
 	helloworld.zyr - Basic "Hello, World!" application.
+	variables.zyr - Variable types.
 zephyr/
 	__init__.py - Python module for Zephyr.
 zephyr-compile.py - Compilation script for Zephyr applications.
