@@ -5,10 +5,11 @@
 # 2 - Couldn't open file
 # 3 - Syntax error
 # 4 - Missing #mainfunc
+# 5 - Trying to use reserved name
 
 import os, sys
 
-import zephyr
+from zephyr import SourceFile
 
 try:
 	fileName = sys.argv[1]
@@ -22,7 +23,7 @@ except:
 	print("Error! Couldn't open " + fileName)
 	sys.exit(2)
 
-sourceFile = zephyr.SourceFile(fileContents)
+sourceFile = SourceFile.createFrom(fileContents)
 print("Generated source code: ")
 print("")
 print(sourceFile.genASM())
