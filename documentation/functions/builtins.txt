@@ -7,3 +7,6 @@ push_all()
 
 pop_all()
 	This function pops all registers from the stack.
+
+hang()
+    This causes the program to enter an endless loop.
