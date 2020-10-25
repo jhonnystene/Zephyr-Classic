@@ -1,0 +1,12 @@
+#library
+
+func f1() {
+	do f2() if ax == 10;
+	do f2() if ax >= 10;
+	do f2() if ax <= 10;
+	do f2() if ax != 10;
+}
+
+func f2() {
+	ax = 0;
+}

@@ -66,7 +66,7 @@ class Function:
 					asm += "sub " + instruction[0].lower() + ", " + instruction[2].lower() + "\n"
 				
 			# Function call
-			elif("(" in line and ")" in line):
+			elif("(" in line and ")" in line and "do " not in line):
 				command = line.split("(") # Split command and argument
 				command[1] = command[1][:-1] # Remove ) from argument
 				if(command[0] in zephyr.builtins): # Are we trying to use a built-in function?
@@ -89,6 +89,28 @@ class Function:
 			elif(line == "loop"):
 				asm += ".loop:\n"
 				self.hasLoop = True
+			
+			# Comparison?
+			elif("do " in line):
+				command = line.split(" ")
+				command[1] = command[1][:-2] # Strip brackets from function
+				asm += "cmp " + command[3] + "," + command[5] + "\n"
+				
+				if(">" in command[4]):
+					if("<" in command[4]):
+						zephyr.error("Error in function code! (" + line + " invalid)", 4)
+					asm += "ja " + command[1] + "\n"
+				
+				elif("<" in command[4]):
+					asm += "jb " + command[1] + "\n"
+				
+				if("=" in command[4]):
+					if("!" in command[4]):
+						if("<" in command or ">" in command):
+							zephyr.error("Error in function code! (" + line + " invalid)", 4)
+						asm += "jne " + command[1] + "\n"
+					else:
+						asm += "je " + command[1] + "\n"
 			
 			# Syntax error?
 			else:

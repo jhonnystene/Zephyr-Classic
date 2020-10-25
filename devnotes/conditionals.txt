@@ -1,7 +1,7 @@
 CONDITIONAL PARSING
 
 Syntax:
-	do functionName() if ( condition )
+	do functionName() if condition
 
 1. Look at condition
 	- Is there an equals sign?
@@ -16,11 +16,7 @@ Syntax:
 		- If so, we need to have a jb statement
 		
 	- Is there a less than AND a more than sign?
-		- Is there an equals sign?
-			- Error out
-			
-		- Is there not an equals sign?
-			- If so, we need to have a jne statement
+		- Error out
 	
 	- What two things are we comparing? (C1 and C2)
 
