@@ -1,0 +1,7 @@
+#library
+
+func ltest() {
+	ax = 0;
+	loop;
+	ax = 1;
+}

@@ -1,0 +1,34 @@
+CONDITIONAL PARSING
+
+Syntax:
+	do functionName() if ( condition )
+
+1. Look at condition
+	- Is there an equals sign?
+		- Is there an exclaimation mark?
+			- If so, we need to have a jne statement
+			- If not, we need to have a je statement
+		
+	- Is there a more than sign but not a less than sign?
+		- If so, we need to have a ja statement
+		
+	- Is there a less than sign but not a more than sign? 
+		- If so, we need to have a jb statement
+		
+	- Is there a less than AND a more than sign?
+		- Is there an equals sign?
+			- Error out
+			
+		- Is there not an equals sign?
+			- If so, we need to have a jne statement
+	
+	- What two things are we comparing? (C1 and C2)
+
+2. Do a comparison between C1 and C2
+	- cmp C1, C2
+	
+3. Add in any needed conditionals
+	- je
+	- jne
+	- ja
+	- jb

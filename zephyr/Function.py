@@ -13,6 +13,7 @@ class Function:
 		self.code = ""
 		self.name = ""
 		self.variables = []
+		self.hasLoop = False
 		
 	def genASM(self):
 		# Parse function code into ASM
@@ -83,10 +84,18 @@ class Function:
 			# Return statement?
 			elif(line == "return"):
 				asm += "ret\n"
+				
+			# Loop declaration?
+			elif(line == "loop"):
+				asm += ".loop:\n"
+				self.hasLoop = True
 			
 			# Syntax error?
 			else:
 				zephyr.error("Error in function code! (" + line + " invalid)", 3) # TODO: Print line number
+		
+		if(self.hasLoop):
+			asm += "jmp .loop"
 		
 		for variable in self.variables:
 			asm += variable.genASM() + "\n"

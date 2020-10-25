@@ -2,7 +2,7 @@ import sys
 
 registers = ["eax", "ebx", "ecx", "edx", "ax", "ah", "al", "bx", "bh", "bl", "cx", "ch", "cl", "dx", "dh", "dl", "si", "di"]
 builtins = ["inturrupt", "push_all", "pop_all", "hang"]
-reserved = ["byte", "word", "dword", "string", "func", "return"]
+reserved = ["byte", "word", "dword", "string", "func", "return", "loop"]
 disallowed = "`~!@#$%^&*-=+[]{}\\|/?.>,<\'\";: \n\t"
 
 def stripTabs(code):
