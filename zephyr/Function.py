@@ -33,7 +33,15 @@ class Function:
 			
 			# Variable/register set
 			elif(" = " in line):
-				if("byte " in line or "word " in line or "dword " in line or "string " in line):
+				if("(byte) " in line or "(word) " in line or "(dword) " in line or "(string) " in line):
+					variableName = line.split(" ")[0].lower()
+					variableCast = line.split(" ")[2].lower()[1:-1]
+					variableValue = line.split(" ")[3].lower()
+					if(variableCast == "string"):
+						variableCast = "byte"
+					asm += "mov " + variableCast + " " + variableName + ", " + variableValue + "\n"
+						
+				elif("byte " in line or "word " in line or "dword " in line or "string " in line):
 					variableType = line.split(" ")[0]
 					variableName = line.split(" ")[1].lower()
 					if(variableName in zephyr.registers or variableName in zephyr.builtins):
