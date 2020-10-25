@@ -1,7 +1,7 @@
 import sys
 
 registers = ["eax", "ebx", "ecx", "edx", "ax", "ah", "al", "bx", "bh", "bl", "cx", "ch", "cl", "dx", "dh", "dl", "si", "di"]
-builtins = ["inturrupt", "push_all", "pop_all", "hang"]
+builtins = ["inturrupt", "push_all", "pop_all", "hang", "push", "pop"]
 reserved = ["byte", "word", "dword", "string", "func", "return", "loop", "do"]
 disallowed = "`~!@#$%^&*-=+[]{}\\|/?.>,<\'\";: \n\t"
 

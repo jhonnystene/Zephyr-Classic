@@ -65,6 +65,13 @@ class Function:
 				else:
 					asm += "sub " + instruction[0].lower() + ", " + instruction[2].lower() + "\n"
 				
+			elif("++" in line or "--" in line):
+				instruction = line.split(" ")
+				if(instruction[1] == "++"):
+					asm += "inc " + instruction[0].lower() + "\n"
+				else:
+					asm += "dec " + instruction[0].lower() + "\n"
+				
 			# Function call
 			elif("(" in line and ")" in line and "do " not in line):
 				command = line.split("(") # Split command and argument
@@ -76,6 +83,10 @@ class Function:
 						asm += "pusha\n"
 					elif(command[0] == "pop_all"): # POPA?
 						asm += "popa\n"
+					elif(command[0] == "push"):
+						asm += "push " + command[1] + "\n"
+					elif(command[0] == "pop"):
+						asm += "pop " + command[1] + "\n"
 					elif(command[0] == "hang"): # Hang?
 						asm += ".hang:\njmp .hang\n"
 				else: # Only call commands for now. Maybe JMP support in future?
@@ -117,7 +128,7 @@ class Function:
 				zephyr.error("Error in function code! (" + line + " invalid)", 3) # TODO: Print line number
 		
 		if(self.hasLoop):
-			asm += "jmp .loop"
+			asm += "jmp .loop\n"
 		
 		for variable in self.variables:
 			asm += variable.genASM() + "\n"
